@@ -28,7 +28,7 @@ An example of raw data, which accomplishes all of the above using BMD's built-in
 # Raw Data Examples
 
 1. Connection to database:
-```js
+```json
 {
   "name": "Connection to Dashboard",
   "type": "event",
@@ -58,7 +58,7 @@ An example of raw data, which accomplishes all of the above using BMD's built-in
 
 2. Receiving Data and Updating the Server Data Database
 
-```js
+```json
 {
   "name": "Dashboard Data Changed",
   "type": "event",
