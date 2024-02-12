@@ -26,7 +26,7 @@ module.exports = {
     },
 
     async run(values, message, client, bridge) {
-        let interaction = bridge.get(values.interaction);
+        let interaction = bridge.get(values.interaction)?.d;
         let success = bridge.transf(values.success) === "True";
         const ws = client.dashboard.ws;
 

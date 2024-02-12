@@ -43,7 +43,10 @@ module.exports = {
     async run(values, msg, client, bridge) {
         const WebSocket = require("ws");
         console.log("[Dashboard] Initializing...");
-        client.dashboard = {};
+        if (!client.dashboard) {
+            client.dashboard = {};
+            client.dashboard.events = {};
+        }
         const ws = new WebSocket("ws://localhost:3001/api/ws");
 
         client.dashboard.ws = ws;
@@ -84,7 +87,7 @@ module.exports = {
                 const { guildId, interactionId } = data.d;
                 let serverData;
                 try {
-                    serverData = JSON.parse(await bridge.data.IO.get().guilds[guildId]);
+                    serverData = await bridge.data.IO.get().guilds[guildId];
                 } catch (e) {
                     console.log(`[Dashboard] Error parsing guild data: ${e}\nReturning empty object.`);
                 }
@@ -98,7 +101,7 @@ module.exports = {
                         }
                     }));
                 } catch (e) {
-                    console.error(`[Dashboard] Error sending message: ${e}`);
+                    console.log(`[Dashboard] Error sending message: ${e}`);
                 }
             },
             [OP_CODES.MODIFY_GUILD_DATA]: async ({ data }) => {
@@ -111,7 +114,7 @@ module.exports = {
             try {
                 data = JSON.parse(message);
             } catch (e) {
-                console.error(`[Dashboard] Error parsing message: ${e}`);
+                console.log(`[Dashboard] Error parsing message: ${e}`);
                 return;
             }
 
@@ -123,7 +126,7 @@ module.exports = {
                 try {
                     await handler({ data, appID, appSecret });
                 } catch (e) {
-                    console.error(`[Dashboard] Error handling message: ${e}`);
+                    console.log(`[Dashboard] Error handling message: ${e}`);
                 }
             }
         };

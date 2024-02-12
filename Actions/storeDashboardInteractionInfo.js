@@ -33,7 +33,7 @@ module.exports = {
     },
 
     async run(values, message, client, bridge) {
-        let interaction = bridge.get(values.interaction);
+        let interaction = bridge.get(values.interaction)?.d;
         let info = bridge.transf(values.info);
 
         if (!interaction) return;
