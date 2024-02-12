@@ -39,8 +39,8 @@ An example of raw data, which accomplishes all of the above using BMD's built-in
       "file": "initializeDashboardConnection.js",
       "data": {
         "name": "Initialize Dashboard Connection",
-        "appID": "8d921682-8f5c-40d0-9aac-d18e0df63da6",
-        "appSecret": "Y3wqGd9Lcq1KfuxK3TpizoAdY6tqc1cU",
+        "appID": "APPLICATION_ID",
+        "appSecret": "APPLICATION_SECRET",
         "debug": false
       },
       "id": 1707638981563
