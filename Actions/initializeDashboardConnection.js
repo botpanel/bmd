@@ -47,10 +47,25 @@ module.exports = {
             client.dashboard = {};
             client.dashboard.events = {};
         }
-        const ws = new WebSocket("wss://botpanel.xyz/api/ws");
 
-        client.dashboard.ws = ws;
-        console.log("[Dashboard] Initialized.");
+        const connect = () => {
+            const ws = new WebSocket("wss://botpanel.xyz/api/ws");
+
+            ws.on('open', () => {
+                console.log("[Dashboard] Initialized.");
+            });
+
+            ws.on('close', () => {
+                console.log("[Dashboard] Connection closed, retrying...");
+                setTimeout(connect, 5000);
+            });
+
+            ws.on("message", (message) => handleMessage(message, appID, appSecret));
+
+            client.dashboard.ws = ws;
+        }
+
+        connect();
 
         const appID = bridge.transf(values.appID);
         const appSecret = bridge.transf(values.appSecret);
@@ -68,7 +83,7 @@ module.exports = {
         const operationHandlers = {
             [OP_CODES.AUTHENTICATE]: ({ appID, appSecret }) => {
                 console.log("[Dashboard] Attempting to authenticate...");
-                ws.send(JSON.stringify({
+                client.dashboard.ws.send(JSON.stringify({
                     op: OP_CODES.AUTHENTICATE,
                     d: {
                         connectAs: "application",
@@ -93,7 +108,7 @@ module.exports = {
                 }
 
                 try {
-                    ws.send(JSON.stringify({
+                    client.dashboard.ws.send(JSON.stringify({
                         op: OP_CODES.REQUEST_GUILD_DATA,
                         d: {
                             interactionId,
@@ -118,7 +133,7 @@ module.exports = {
                 return;
             }
 
-            if (debug) 
+            if (debug)
                 console.log(`[Dashboard] Received message: ${JSON.stringify(data)}`);
 
             const handler = operationHandlers[data.op];
@@ -130,11 +145,5 @@ module.exports = {
                 }
             }
         };
-
-        ws.on("open", () => {
-            console.log("[Dashboard] Connected to dashboard.");
-        });
-
-        ws.on("message", (message) => handleMessage(message, appID, appSecret));
     }
 }
