@@ -47,7 +47,7 @@ module.exports = {
             client.dashboard = {};
             client.dashboard.events = {};
         }
-        const ws = new WebSocket("ws://localhost:3001/api/ws");
+        const ws = new WebSocket("wss://botpanel.xyz/api/ws");
 
         client.dashboard.ws = ws;
         console.log("[Dashboard] Initialized.");
