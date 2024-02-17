@@ -155,3 +155,13 @@ An example of raw data, which accomplishes all of the above using BMD's built-in
   "description": "This event is fired whenever the user saves any data in your bot panel"
 }
 ```
+
+# Editing Your User Dashboard
+
+Your user dashboard is what your bot users will see when they access their client dashboard. To manage your user dashboard, in your dev panel, select your application, and on the left navbar, select `Edit User Dashboard`. The user dashboard is built of components, which can be thought of as building blocks for your user dashboard. There are two types of components: a `Header Component` and an `Input Component`. The header component is meant for splitting the dashboard into different sections, and the input component is for retrieving data from the user. For input components, there is data validation. We try our best to validate data on both our frontend and backend before sending the updated data to your bot; however, it is still best practice to verify it yourself before updating it on your side.
+
+When you're done editing your components, such as adding or rearranging them by dragging and dropping, make sure to save them by clicking the `Save` button that appears after changes are made. There are two options for saving components: `Publish Changes` and `Save Changes`. When you click `Save Changes`, the changes will be saved the next time you visit your dashboard editor, but not displayed to users. You, as the application owner, can view these changes on the client dashboard by clicking the `Switch to Developer View` button. This is useful if you want to test dashboard features before deploying them to all of your users. The other button, `Publish Changes`, will publish whatever saved version you have of your dashboard to all of your users.
+
+# Application Verification
+
+Verifiying your application is a vital step in completing your dashboard, made to establish user trust. Read more on this in the `Verification Status` tab on your application's navbar.
