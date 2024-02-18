@@ -10,8 +10,8 @@ This is the setup guide for using [Bot Panel](https://botpanel.xyz) with [Bot Ma
    <br><br>
    ![Image](https://github.com/botpanel/bmd/blob/904c48f406149e5fbf4172109011a5212adba61b/.github/botpanel_bmd_step1.png?raw=true)
 6. Complete all fields.
-7. Download the files from the [Actions](https://github.com/botpanel/bmd/tree/main/actions) directory and place them in your Bot Maker for Discord's `Actions` directory (usually located at C:\Program Files (x86)\Steam\steamapps\common\Bot Maker For Discord\AppData\Actions).
-8. Download the files from the [Events](https://github.com/botpanel/bmd/tree/main/events) directory and place them in your Bot Maker for Discord's `Events` directory (usually located at C:\Program Files (x86)\Steam\steamapps\common\Bot Maker For Discord\AppData\Events).
+7. Download the files from the [Actions](https://github.com/botpanel/bmd/tree/main/Actions) directory and place them in your Bot Maker for Discord's `Actions` directory (usually located at C:\Program Files (x86)\Steam\steamapps\common\Bot Maker For Discord\AppData\Actions).
+8. Download the files from the [Events](https://github.com/botpanel/bmd/tree/main/Events) directory and place them in your Bot Maker for Discord's `Events` directory (usually located at C:\Program Files (x86)\Steam\steamapps\common\Bot Maker For Discord\AppData\Events).
 9. Make sure you have restarted BMD after downloading and installing these mods.
 10. From the developer dashboard, take note of your application id and application secret. Do not share your secret with others.
 11. In your BMD project, navigate to the events section and add the `Initialize Dashboard Connection` action to the `Bot ready` event.
