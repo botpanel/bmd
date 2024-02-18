@@ -105,7 +105,7 @@ module.exports = {
             },
             [OP_CODES.GUILD_INTERACTION]: async ({ data }) => {
                 const { guildId, interactionId } = data.d;
-                const guild = await client.rest.guilds.get(guildId);
+                const guild = await client.rest.guilds.get(guildId).catch(() => null);
                 let serverData;
                 try {
                     serverData = await bridge.data.IO.get().guilds[guildId];
