@@ -94,17 +94,23 @@ module.exports = {
             },
             [OP_CODES.AUTH_SUCCESS]: ({ data, appID }) => {
                 console.log(`[Dashboard] Successfully authenticated with application "${data.d.name}" (${appID})!`);
+                setInterval(() => {
+                    client.dashboard.ws.send(JSON.stringify({
+                        op: 8
+                    }));
+                }, data.d.heartbeatInterval);
             },
             [OP_CODES.ERROR]: ({ data }) => {
                 console.log(`[Dashboard] Error: ${data.d.error}`);
             },
             [OP_CODES.GUILD_INTERACTION]: async ({ data }) => {
                 const { guildId, interactionId } = data.d;
+                const guild = await client.rest.guilds.get(guildId);
                 let serverData;
                 try {
                     serverData = await bridge.data.IO.get().guilds[guildId];
                 } catch (e) {
-                    console.log(`[Dashboard] Error parsing guild data: ${e}\nReturning empty object.`);
+                    console.log(`[Dashboard] Error fetching guild data: ${e}\nReturning empty object.`);
                 }
 
                 try {
@@ -112,7 +118,8 @@ module.exports = {
                         op: OP_CODES.REQUEST_GUILD_DATA,
                         d: {
                             interactionId,
-                            data: serverData || {}
+                            data: serverData || {},
+                            inGuild: !!guild
                         }
                     }));
                 } catch (e) {
