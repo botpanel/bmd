@@ -165,3 +165,7 @@ When you're done editing your components, such as adding or rearranging them by 
 # Application Verification
 
 Verifiying your application is a vital step in completing your dashboard, made to establish user trust. Read more on this in the `Verification Status` tab on your application's navbar.
+
+# Sharing your dashboard with your users
+
+Sharing your dashboard with your users is as easy as sending them the link to your dashboard. After visiting it only once, it will forever be shown in their `Recent` section in the client dashboard.
