@@ -17,6 +17,8 @@ module.exports = {
                 { name: "Interaction ID"},
                 { name: "Variable Name"},
                 { name: "Guild ID"},
+                { name: "User ID"},
+                { name: "Input Type"},
                 { name: "New Value"}
             ]
         },
@@ -42,6 +44,8 @@ module.exports = {
             "Interaction ID": "interactionId",
             "Variable Name": "varname",
             "Guild ID": "guildId",
+            "User ID": "userId",
+            "Input Type": "inputType",
             "New Value": "data"
         };
 
