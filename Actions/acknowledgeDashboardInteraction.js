@@ -34,7 +34,7 @@ module.exports = {
 
         await new Promise((resolve) => {
             ws.send(JSON.stringify({
-                op: 7,
+                op: client.dashboard.OP_CODES.ACKNOWLEDGE_INTERACTION,
                 d: {
                     interactionId: interaction.interactionId,
                     success: success,

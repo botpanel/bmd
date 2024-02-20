@@ -78,8 +78,12 @@ module.exports = {
             GUILD_INTERACTION: 4,
             REQUEST_GUILD_DATA: 5,
             MODIFY_GUILD_DATA: 6,
+            ACKNOWLEDGE_INTERACTION: 7,
+            HEARTBEAT: 8
         };
 
+        client.dashboard.OP_CODES = OP_CODES;
+        
         const operationHandlers = {
             [OP_CODES.AUTHENTICATE]: ({ appID, appSecret }) => {
                 console.log("[Dashboard] Attempting to authenticate...");
@@ -96,7 +100,7 @@ module.exports = {
                 console.log(`[Dashboard] Successfully authenticated with application "${data.d.name}" (${appID})!`);
                 setInterval(() => {
                     client.dashboard.ws.send(JSON.stringify({
-                        op: 8
+                        op: OP_CODES.HEARTBEAT
                     }));
                 }, data.d.heartbeatInterval);
             },
