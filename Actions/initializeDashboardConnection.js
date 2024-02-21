@@ -51,11 +51,11 @@ module.exports = {
         const connect = () => {
             const ws = new WebSocket("wss://botpanel.xyz/api/ws");
 
-            ws.on('open', () => {
+            ws.on("open", () => {
                 console.log("[Dashboard] Initialized.");
             });
 
-            ws.on('close', () => {
+            ws.on("close", () => {
                 console.log("[Dashboard] Connection closed, retrying...");
                 setTimeout(connect, 5000);
             });
