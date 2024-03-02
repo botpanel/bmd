@@ -1,3 +1,5 @@
+const { ChannelTypes } = require("oceanic.js");
+
 module.exports = {
     data: {
         name: "Initialize Dashboard Connection",
@@ -48,16 +50,37 @@ module.exports = {
             client.dashboard.events = {};
         }
 
+        let isReconnecting = false;
+
         const connect = () => {
             const ws = new WebSocket("wss://botpanel.xyz/api/ws");
 
+            const timeout = setTimeout(() => {
+                console.log("[Dashboard] Connection timeout, retrying...");
+                ws.terminate();
+                isReconnecting = true;
+                setTimeout(connect, 5000);
+            }, 5000);
+
             ws.on("open", () => {
                 console.log("[Dashboard] Initialized.");
+                clearTimeout(timeout);
+                isReconnecting = false;
             });
 
             ws.on("close", () => {
-                console.log("[Dashboard] Connection closed, retrying...");
-                setTimeout(connect, 5000);
+                if (!isReconnecting) {
+                    console.log("[Dashboard] Connection closed, retrying...");
+                    setTimeout(connect, 5000);
+                }
+            });
+
+            ws.on("error", () => {
+                if (!isReconnecting) {
+                    console.log("[Dashboard] Error, retrying...");
+                    isReconnecting = true;
+                    setTimeout(connect, 5000);
+                }
             });
 
             ws.on("message", (message) => handleMessage(message, appID, appSecret));
@@ -83,7 +106,7 @@ module.exports = {
         };
 
         client.dashboard.OP_CODES = OP_CODES;
-        
+
         const operationHandlers = {
             [OP_CODES.AUTHENTICATE]: ({ appID, appSecret }) => {
                 console.log("[Dashboard] Attempting to authenticate...");
@@ -92,7 +115,8 @@ module.exports = {
                     d: {
                         connectAs: "application",
                         applicationId: appID,
-                        applicationSecret: appSecret
+                        applicationSecret: appSecret,
+                        version: "1.0.0"
                     }
                 }));
             },
@@ -107,27 +131,57 @@ module.exports = {
             [OP_CODES.ERROR]: ({ data }) => {
                 console.log(`[Dashboard] Error: ${data.d.error}`);
             },
-            [OP_CODES.GUILD_INTERACTION]: async ({ data }) => {
-                const { guildId, interactionId } = data.d;
-                const guild = await client.rest.guilds.get(guildId).catch(() => null);
-                let serverData;
-                try {
-                    serverData = await bridge.data.IO.get().guilds[guildId];
-                } catch (e) {
-                    console.log(`[Dashboard] Error fetching guild data: ${e}\nReturning empty object.`);
-                }
+            [OP_CODES.GUILD_INTERACTION]: async ({ data: { d: { guildId, interactionId, include } } }) => {
+                let guild, guildChannels = [], roles = [], data = {};
 
                 try {
-                    client.dashboard.ws.send(JSON.stringify({
-                        op: OP_CODES.REQUEST_GUILD_DATA,
-                        d: {
-                            interactionId,
-                            data: serverData || {},
-                            inGuild: !!guild
-                        }
-                    }));
+                    guild = await client.rest.guilds.get(guildId);
+                    data = await bridge.data.IO.get().guilds[guildId];
+                    guildChannels = include.some(i => ["textChannels", "voiceChannels", "categories"].includes(i)) ? await guild.getChannels() : [];
+                    roles = include.includes("roles") ? await guild.getRoles() : [];
                 } catch (e) {
-                    console.log(`[Dashboard] Error sending message: ${e}`);
+                    console.log(`[Dashboard] Error fetching data: ${e}`);
+                }
+
+                const categories = [], textChannels = [], voiceChannels = [];
+
+                const channelTypes = {
+                    [ChannelTypes.GUILD_TEXT]: textChannels,
+                    [ChannelTypes.GUILD_VOICE]: voiceChannels,
+                    [ChannelTypes.GUILD_CATEGORY]: categories
+                };
+
+                guildChannels.forEach(({ id, name, position, type }) => {
+                    const channelData = { id, name, position };
+                    const channelType = channelTypes[type];
+                    if (channelType) {
+                        channelType.push(channelData);
+                    }
+                });
+
+                roles = roles.map(({ id, name, position, managed }) => ({ id, name, position, managed }));
+
+                const dataToSend = {
+                    op: OP_CODES.REQUEST_GUILD_DATA,
+                    d: {
+                        interactionId,
+                        data,
+                        inGuild: !!guild
+                    }
+                };
+
+                const items = ["textChannels", "voiceChannels", "categories", "roles"];
+
+                items.forEach(item => {
+                    if (include.includes(item)) {
+                        dataToSend.d[item] = eval(item);
+                    }
+                });
+
+                try {
+                    client.dashboard.ws.send(JSON.stringify(dataToSend));
+                } catch (e) {
+                    console.log(`[Dashboard] Error sending guild data: ${e}`);
                 }
             },
             [OP_CODES.MODIFY_GUILD_DATA]: async ({ data }) => {
