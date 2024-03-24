@@ -55,7 +55,7 @@ module.exports = {
     let isReconnecting = false;
 
     const connect = () => {
-      const ws = new WebSocket("wss://botpanel.xyz/api/ws");
+      const ws = new WebSocket("wss://wss.botpanel.xyz/");
 
       const timeout = setTimeout(() => {
         console.log("[Dashboard] Connection timeout, retrying...");
