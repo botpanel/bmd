@@ -175,7 +175,7 @@ module.exports = {
           op: OP_CODES.REQUEST_GUILD_DATA,
           d: {
             interactionId,
-            data,
+            data: data || {},
             inGuild: !!guild
           }
         };
