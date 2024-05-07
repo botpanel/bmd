@@ -1,47 +1,64 @@
 module.exports = {
-    data: {
-        name: "Acknowledge Dashboard Interaction",
+  data: {
+    name: "Acknowledge Dashboard Interaction",
+  },
+
+  info: {
+    source: "https://github.com/botpanel/bmd/",
+    creator: "The Bot Panel Team",
+  },
+
+  category: "Dashboard",
+
+  UI: [
+    {
+      element: "var",
+      storeAs: "interaction",
+      name: "Source Interaction",
     },
-    UI: [
-        {
-            element: "var",
-            storeAs: "interaction",
-            name: "Source Interaction",
-        },
-        "_",
-        {
-            element: "dropdown",
-            storeAs: "success",
-            name: "Success",
-            choices: [
-                { name: "True" },
-                { name: "False" }
-            ]
-        },
-        "-"
-    ],
-
-    subtitle: (values, constants) => {
-        return `Acknowledge interaction as ${values.success}`
+    "_",
+    {
+      element: "dropdown",
+      storeAs: "success",
+      name: "Success",
+      choices: [
+        { name: "True" },
+        { name: "False" }
+      ]
     },
+    "_",
+    {
+      element: "input",
+      storeAs: "message",
+      name: "Message",
+    },
+    "-"
+  ],
 
-    async run(values, message, client, bridge) {
-        let interaction = bridge.get(values.interaction)?.d;
-        let success = bridge.transf(values.success) === "True";
-        const ws = client.dashboard.ws;
+  subtitle: (values, constants) => {
+    return `Acknowledge interaction as ${values.success}`
+  },
 
-        if (!interaction || !ws) return;  
+  async run(values, message, client, bridge) {
+    let interaction = bridge.get(values.interaction)?.d;
+    let success = bridge.transf(values.success) === "True";
+    let message = bridge.transf(values.message);
+    
+    const ws = client.dashboard.ws;
 
-        await new Promise((resolve) => {
-            ws.send(JSON.stringify({
-                op: client.dashboard.OP_CODES.ACKNOWLEDGE_INTERACTION,
-                d: {
-                    interactionId: interaction.interactionId,
-                    success: success,
-                    key: interaction.varname,
-                    value: interaction.data
-                }
-            }), resolve);
-        });
-    }
+    if (!interaction || !ws) return;
+
+    await new Promise((resolve) => {
+      ws.send(JSON.stringify({
+        op: client.dashboard.OP_CODES.ACKNOWLEDGE_INTERACTION,
+        d: {
+          interactionId: interaction.interactionId,
+          success: success,
+          message: message,
+          key: interaction.varname,
+          value: interaction.data
+        }
+      }), resolve);
+    });
+  }
 }

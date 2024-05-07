@@ -4,6 +4,14 @@ module.exports = {
   data: {
     name: "Initialize Dashboard Connection",
   },
+
+  info: {
+    source: "https://github.com/botpanel/bmd/",
+    creator: "The Bot Panel Team",
+  },
+
+  category: "Dashboard",
+
   UI: [
     {
       element: "text",
@@ -44,6 +52,7 @@ module.exports = {
 
   async run(values, msg, client, bridge) {
     const WebSocket = require("ws");
+    const WS_VERSION = "1.1.0";
     let allowReconnect = true;
 
     console.log("[Dashboard] Initializing...");
@@ -125,7 +134,7 @@ module.exports = {
             connectAs: "application",
             applicationId: appID,
             applicationSecret: appSecret,
-            version: "1.0.0"
+            version: WS_VERSION
           }
         }));
       },
