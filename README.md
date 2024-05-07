@@ -141,7 +141,8 @@ An example of raw data, which accomplishes all of the above using BMD's built-in
           "type": "tempVar",
           "value": "interaction"
         },
-        "success": "True"
+        "success": "True",
+        "message": "Successfully updated!",
       },
       "id": 1707718668923
     }
