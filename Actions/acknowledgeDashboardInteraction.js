@@ -42,7 +42,7 @@ module.exports = {
   async run(values, message, client, bridge) {
     let interaction = bridge.get(values.interaction)?.d;
     let success = bridge.transf(values.success) === "True";
-    let message = bridge.transf(values.message);
+    let customMessage = bridge.transf(values.message);
     
     const ws = client.dashboard.ws;
 
@@ -54,7 +54,7 @@ module.exports = {
         d: {
           interactionId: interaction.interactionId,
           success: success,
-          message: message,
+          message: customMessage,
           key: interaction.varname,
           value: interaction.data
         }
