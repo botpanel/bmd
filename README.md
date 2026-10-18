@@ -59,7 +59,7 @@ An example of raw data, which accomplishes all of the above using BMD's built-in
 2. Receiving Data and Updating the Server Data Database
 
 ```json
-{
+    {
   "name": "Dashboard Data Changed",
   "type": "event",
   "trigger": "event",
@@ -76,10 +76,10 @@ An example of raw data, which accomplishes all of the above using BMD's built-in
         "info": "Variable Name",
         "interactionValue": {
           "type": "temporary",
-          "value": "varname"
+          "value": "variableName"
         }
       },
-      "id": 1707718560136
+      "id": 1774125457246
     },
     {
       "name": "Store Dashboard Interaction Info",
@@ -93,10 +93,10 @@ An example of raw data, which accomplishes all of the above using BMD's built-in
         "info": "New Value",
         "interactionValue": {
           "type": "temporary",
-          "value": "newval"
+          "value": "newValue"
         }
       },
-      "id": 1707718605262
+      "id": 1774125516190
     },
     {
       "name": "Store Dashboard Interaction Info",
@@ -110,27 +110,27 @@ An example of raw data, which accomplishes all of the above using BMD's built-in
         "info": "Guild ID",
         "interactionValue": {
           "type": "temporary",
-          "value": "guildid"
+          "value": "guildID"
         }
       },
-      "id": 1707724861253
+      "id": 1774127648123
     },
     {
-      "name": "Store Guild Data",
+      "name": "Store Server Data",
       "file": "storeGuildData.js",
       "data": {
-        "name": "Store Guild Data",
+        "name": "Store Server Data",
         "source": {
-          "type": "tempVar",
-          "value": "newval"
+          "type": "string",
+          "value": "${tempVars('newValue')}"
         },
         "guild": {
           "type": "id",
-          "value": "${tempVars('guildid')}"
+          "value": "${tempVars('guildID')}"
         },
-        "dataName": "${tempVars('varname')}"
+        "dataName": "${tempVars('variableName')}"
       },
-      "id": 1707723423090
+      "id": 1774125705411
     },
     {
       "name": "Acknowledge Dashboard Interaction",
@@ -142,19 +142,21 @@ An example of raw data, which accomplishes all of the above using BMD's built-in
           "value": "interaction"
         },
         "success": "True",
-        "message": "Successfully updated!",
+        "message": "Successfully updated!"
       },
-      "id": 1707718668923
+      "id": 1774126441589
     }
   ],
-  "customId": 1707717017242,
+  "customId": 1774129143858,
   "eventFile": "dashboard_data_update.js",
   "eventData": [
     "interaction",
     ""
   ],
+  "folder": [],
   "description": "This event is fired whenever the user saves any data in your bot panel"
 }
+    
 ```
 
 # Editing Your User Dashboard
