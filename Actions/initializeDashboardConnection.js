@@ -79,7 +79,7 @@ module.exports = {
 
   async run(values, msg, client, bridge) {
     const WebSocket = require("ws");
-    const WS_VERSION = "1.1.0";
+    const WS_VERSION = "1.2.1";
     let allowReconnect = true;
     let heartbeat;
 
