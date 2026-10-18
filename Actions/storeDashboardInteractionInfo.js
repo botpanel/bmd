@@ -1,6 +1,6 @@
 module.exports = {
   data: {
-    name: "Store Dashboard Interaction Info"
+    name: "Store Dashboard Interaction Info",
   },
 
   info: {
@@ -27,19 +27,20 @@ module.exports = {
         { name: "Guild ID" },
         { name: "User ID" },
         { name: "Input Type" },
-        { name: "New Value" }
-      ]
+        { name: "New Value" },
+        { name: "Section Header" },
+      ],
     },
     "-",
     {
       element: "store",
       storeAs: "interactionValue",
-      name: "Store Interaction Value"
-    }
+      name: "Store Interaction Value",
+    },
   ],
 
   subtitle: (values, constants) => {
-    return `Store ${values.info} as ${constants.variable(values.interactionValue)}`
+    return `Store ${values.info} as ${constants.variable(values.interactionValue)}`;
   },
 
   async run(values, message, client, bridge) {
@@ -54,11 +55,12 @@ module.exports = {
       "Guild ID": "guildId",
       "User ID": "userId",
       "Input Type": "inputType",
-      "New Value": "data"
+      "New Value": "data",
+      "Section Header": "sectionHeader",
     };
 
     let result = interaction[infoMap[info]];
 
     bridge.store(values.interactionValue, result);
-  }
-}
+  },
+};
