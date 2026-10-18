@@ -8,7 +8,7 @@ module.exports = {
     creator: "The Bot Panel Team",
   },
 
-  category: "Dashboard",
+  category: "Bot Panel",
 
   UI: [
     {
@@ -43,7 +43,7 @@ module.exports = {
     let interaction = bridge.get(values.interaction)?.d;
     let success = bridge.transf(values.success) === "True";
     let customMessage = bridge.transf(values.message);
-    
+
     const ws = client.dashboard.ws;
 
     if (!interaction || !ws) return;
