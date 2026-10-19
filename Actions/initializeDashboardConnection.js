@@ -15,11 +15,11 @@ module.exports = {
   UI: [
     {
       element: "text",
-      text: "This action is for setting up the connection with dashboard <code>https://botpanel.xyz</code>."
+      text: "This action is for setting up the connection with dashboard <code>https://botpanel.xyz</code>.",
     },
     {
       element: "text",
-      text: "Make sure to place it under <code>Bot ready</code> event."
+      text: "Make sure to place it under <code>Bot ready</code> event.",
     },
     "-",
     {
@@ -35,17 +35,16 @@ module.exports = {
     "-",
     {
       element: "text",
-      text: "<h style='font-size: 25px; padding-top:5px'>Dashboard Variables</h>"
+      text: "<h style='font-size: 25px; padding-top:5px'>Dashboard Variables</h>",
     },
     {
         element: "text",
-        text: "Variables are used for components on the dashboard. You can use a server/global variable or call a command/event and specify the stored temporary variable. The variable should be an object containing the names of each dashboard variable and their values."
+      element: "text",
     },
     {
       element: "input",
       name: "Command / Event ID",
       placeholder: "Optional",
-      storeAs: "customID"
     },
     {
       element: "variable",
@@ -55,18 +54,20 @@ module.exports = {
     "-",
     {
       element: "text",
-      text: "Debug Options"
     },
     {
         element: "toggle",
         storeAs: "debug",
         name: "Debug Mode",
+      storeAs: "debug",
+      name: "Debug Mode",
     },
     {
       element: "input",
       storeAs: "wsurl",
       name: "Websocket URL (For development purposes only. Do not use.)",
     }
+    },
   ],
 
   compatibility: ["Any"],
@@ -159,44 +160,59 @@ module.exports = {
       [OP_CODES.AUTHENTICATE]: ({ appID, appSecret }) => {
         console.log("[Bot Panel] Attempting to authenticate...");
         client.dashboard.ws.send(JSON.stringify({
-          op: OP_CODES.AUTHENTICATE,
-          d: {
-            connectAs: "application",
-            applicationId: appID,
-            applicationSecret: appSecret,
-            version: WS_VERSION
-          }
         }));
+          JSON.stringify({
+            op: OP_CODES.AUTHENTICATE,
+            d: {
+              connectAs: "application",
+              version: WS_VERSION,
+            },
+          }),
+        );
       },
       [OP_CODES.AUTH_SUCCESS]: ({ data, appID }) => {
-        console.log(`[Bot Panel] Successfully authenticated with application "${data.d.name}" (${appID})!`);
+        console.log(
         clearInterval(heartbeat);
         interval = setInterval(() => {
-          client.dashboard.ws.send(JSON.stringify({
-            op: OP_CODES.HEARTBEAT
           }));
+            JSON.stringify({
+              op: OP_CODES.HEARTBEAT,
+            }),
+          );
         }, data.d.heartbeatInterval);
       },
       [OP_CODES.ERROR]: ({ data }) => {
-        if (data.d.error === "Invalid websocket version. UPDATE EXTENSION.") allowReconnect = false;
+        if (data.d.error === "Invalid websocket version. UPDATE EXTENSION.")
+          allowReconnect = false;
         console.log(`[Bot Panel] Error: ${data.d.error}`);
       },
-      [OP_CODES.GUILD_INTERACTION]: async ({ data: { d: { guildId, interactionId, include } } }) => {
         let guild, guildChannels = [], roles = [], data = {};
         let variables
+      [OP_CODES.GUILD_INTERACTION]: async ({
+        data: {
+        },
+      }) => {
+        let guild = client.guilds.get(guildId),
+          guildChannels = [],
+          roles = [],
+          data = {};
 
         try {
-          guild = await client.rest.guilds.get(guildId);
-          data = bridge.data.IO.get().guilds[guildId];
-          guildChannels = include.some(i => ["textChannels", "voiceChannels", "categories"].includes(i)) ? await guild.getChannels() : [];
-          roles = include.includes("roles") ? await guild.getRoles() : [];
+          if (guild) {
+            data = bridge.data.IO.get().guilds[guildId];
+            )
+          }
         } catch (e) {
-          console.log(`[Bot Panel] Error fetching data: ${e}`);
+          if (e?.code === 10004 || /Unknown Guild/.test(String(e))) {
+          } else {
+            console.log(`[Bot Panel] Error fetching data: ${e}`);
         }
 
         bridge.guild = guild;
 
         const categories = [], textChannels = [], voiceChannels = [];
+          textChannels = [],
+          voiceChannels = [];
 
         const channelTypes = {
           [ChannelTypes.GUILD_TEXT]: textChannels,
@@ -213,7 +229,7 @@ module.exports = {
         });
 
         if (values.customID) {
-          let prjdata = require('../data.json');
+          let prjdata = require("../data.json");
           let commands = prjdata.commands;
           for (let cmd in commands) {
             let command = commands[cmd];
@@ -221,19 +237,22 @@ module.exports = {
               await bridge.runner(cmd);
             }
           }
-        };
+        }
 
-        roles = roles.map(({ id, name, position, managed }) => ({ id, name, position, managed }));
+        roles = roles.map(({ id, name, position, managed }) => ({
+          position,
+          managed,
+        }));
 
         const dataToSend = {
           op: OP_CODES.REQUEST_GUILD_DATA,
           d: {
             interactionId,
-            variables: values.dashboardVars.value != "" ? bridge.get(values.dashboardVars) : null,
             data: data || {},
             inGuild: !!guild,
             online: true
-          }
+            online: true,
+          },
         };
         const items = ["textChannels", "voiceChannels", "categories", "roles"];
 
