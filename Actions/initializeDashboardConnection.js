@@ -263,6 +263,7 @@ module.exports = {
                 : null,
             data: data || {},
             inGuild: !!guild,
+            guildName: guild?.name,
             online: true,
           },
         };
